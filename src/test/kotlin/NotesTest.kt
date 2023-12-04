@@ -3,6 +3,7 @@ import Note.commentId
 import Note.createComment
 import Note.deleteComment
 import Note.deleteNote
+import Note.deletedComment
 import Note.editNote
 import Note.message
 import Note.noteId
@@ -34,7 +35,7 @@ class NotesTest {
     fun deleteNoteTest() {
         addNote("hello", "world")
         createComment(1, "wow")
-        deleteNote(1, "hello")
+        deleteNote(1)
         val result = 1
         assertEquals(1, result)
     }
@@ -50,7 +51,7 @@ class NotesTest {
         addNote("hello", "world")
         createComment(1, "wow")
         deleteComment(1)
-        val result = message
-        assertEquals(null, result)
+        val result = deletedComment
+        assertEquals(true, result)
     }
     }
