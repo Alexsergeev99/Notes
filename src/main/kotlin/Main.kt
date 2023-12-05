@@ -6,229 +6,107 @@ import Note.deleteNote
 import Note.editComment
 import Note.editNote
 import Note.getNotes
-import Note.message
 import Note.noteId
 import Note.restoreComment
-import Note.title
 
-//data class Notes(
-//    var noteId: Int = 0,
-//    var title: String? = null,
-//    var text: String? = null,
-//    var comments: MutableMap<Int/*commentId*/, Comment> = mutableMapOf()
-//)
-//data class Comment(
-//    val commentId: Int = 0,
-//    val noteId: Int = 0, //id заметки, к которой оставлен комментарий
-//    var text: String? = null, //Текст комментария
-//    var isDeleted: Boolean = false //Удалён ли комментарий
-//)
-object Note {
-    private var mapNotes = mutableMapOf<Int/*noteId*/, Notes>()
-//    private var commentsMap = mutableMapOf<Int/*noteId*/, Comment>() //Если не хранить в поле класса Note
-    private var idCounter: Int = 0
-//    fun clear() {
-//        mapNotes = mutableMapOf()
-////        commentsMap = mutableMapOf()
-//        noteId = 0
-//    }
-    data class Notes(var noteId: Int = 0,
-        var title: String? = null,
-        var text: String? = null,
-        var deletedComment: Boolean = false,
-        var message: String? = null,
-        var commentId: Int = 0,
-//        var comments: MutableMap<Int/*commentId*/, Comment> = mutableMapOf()
+data class Notes(
+    var noteId: Int = 0,
+    var title: String? = null,
+    var text: String? = null,
+    var comments: MutableMap<Int/*commentId*/, Comment> = mutableMapOf()
 )
-//data class Comment(
-//    val commentId: Int = 0,
-//    val noteId: Int = 0, //id заметки, к которой оставлен комментарий
-//    var message: String? = null, //Текст комментария
-//    var deletedComment: Boolean = false //Удалён ли комментарий
-//)
 
-    var title: String? = null
-    var text: String? = null
-    var noteId: Int = 0
-    var deletedComment: Boolean = false
-    var message: String? = null
-    var commentId: Int = 0
-//    var comments: MutableMap<Int/*commentId*/, Comment> = mutableMapOf()
+data class Comment(
+    val commentId: Int = 0,
+    val noteId: Int = 0, //id заметки, к которой оставлен комментарий
+    var message: String? = null, //Текст комментария
+    var deletedComment: Boolean = false //Удалён ли комментарий
+)
 
-    var notesTitleMap = mutableMapOf<Int, String>()
-        var notesIdList = mutableListOf<Int>()
-        //var commentsMap = mutableMapOf<Int, String?>()
-        var notesTextMap = mutableMapOf<Int, String>()
-        var deleteComments = mutableMapOf<Int, String?>()
-        var listm = mutableListOf<Notes>()
+object Note {
+    var mapNotes = mutableMapOf<Int/*noteId*/, Notes>()
+    var noteId: Int = 0 // Счётчик для создания id заметок
+    var commentId: Int = 0 // Счётчик для создания id комментариев
+    fun clear() { // Сбрасываем поля в исходные значения
+        mapNotes = mutableMapOf()
+        noteId = 0
+        commentId = 0
+    }
 
-        fun addNote(title: String?, text: String?): Int {
-//            notesIdList.add(noteId++)
-//            notesTitleMap.put(noteId, title)
-//            notesTextMap.put(noteId, text)
-            this.title = title
-            this.text = text
-            noteId = listm.lastIndex + 1
-            listm.add(Notes(++noteId, title = title, text = text))
-            noteId = listm.lastIndex + 1
-            mapNotes.put(noteId, Notes(noteId = mapNotes.size + 1, title = title, text = text))
-            return noteId
-        }
+    fun addNote(title: String?, text: String?): Int {
 
-        fun createComment(noteId: Int, message: String): Int {
-//                comments.put(noteId,
-//                    Comment(commentId = commentId + 1,
-//                    noteId = noteId,
-//                        message = message,
-//                        deletedComment = false))
-                this.message = message
-                text = listm[noteId - 1].text
-                title = listm[noteId-1].title
-//                commentId++
-//                listm.set(
-//                    noteId - 1, Notes(
-//                        noteId = noteId,
-//                        text = listm[noteId - 1].text,
-//                        title = listm[noteId-1].title,
-//                        commentId = commentId + 1,
-//                        message = message
-//                    )
-//                )
-            mapNotes.set(noteId, Notes(noteId = mapNotes.getValue(noteId).noteId,
-                commentId = ++commentId,
-                message = message,
-                text = mapNotes.getValue(noteId).text,
-                title = mapNotes.getValue(noteId).title))
-//            mapNotes.set(noteId, Notes(noteId = mapNotes.getValue(noteId).noteId,
-//                text = mapNotes.getValue(noteId).text,
-//                title = mapNotes.getValue(noteId).title), commentId = commentId + 1, message = message
-                return noteId
-        }
-        fun deleteNote(noteId: Int): Int {
-//                notesIdList.remove(noteId)
-//                notesTitleMap.remove(noteId)
-//                notesTextMap.remove(noteId)
-            deleteComment(noteId)
-            listm.removeAt(noteId - 1)
-            mapNotes.remove(noteId)
-            return 1
-        }
+        mapNotes[++noteId] = Notes(noteId = noteId, title = title, text = text)
+        return noteId
+    }
 
-        fun deleteComment(noteId:Int): Int {
-//            deleteComments.put(commentId, commentsMap.get(commentId))
-//            commentsMap.remove(commentId, message)
-//        this.message = null
-            if(mapNotes.getValue(noteId).message != null) {
-                deletedComment = true
-                message = null
-//                listm.set(
-//                    commentId - 1, Notes(
-//                        noteId = noteId,
-//                        text = listm[commentId - 1].text,
-//                        title = listm[commentId - 1].title,
-//                        deletedComment = deletedComment,
-//                        message = null,
-//                        commentId = commentId
-//                    )
-//                )
-                mapNotes.set(noteId, Notes(noteId = mapNotes.getValue(noteId).noteId,
-                    commentId = mapNotes.getValue(noteId).commentId,
-                    message = null,
-                    deletedComment = true,
-                    text = mapNotes.getValue(noteId).text,
-                    title = mapNotes.getValue(noteId).title)
-                )
-            }
-            return 1
-        }
+    fun createComment(noteId: Int, message: String): Int {
 
-        fun editNote(noteId: Int, title: String, text: String): Int {
-            notesTextMap.set(noteId, text)
-            notesTitleMap.set(noteId, title)
-            this.title = title
-            this.text = text
-//            listm.set(noteId, Notes(title = title, text = text))
-            mapNotes.set(noteId, Notes(noteId = mapNotes.getValue(noteId).noteId,
-                commentId = mapNotes.getValue(noteId).noteId,
-                message = message,
-                text = text,
-                title = title))
-            return noteId
-        }
+        val note = mapNotes[noteId]
+            ?: return -1 // Если удалить не удалось - вернёт null, с помощью элвис оператора возвращаем -1
+        note.comments[++commentId] = Comment(commentId, noteId, message) //Создаём новый комментарий во внутренней мапе
+        return commentId
+    }
 
-        fun editComment(noteId: Int, message: String): Int {
-            if (deletedComment == false) {
-//                commentsMap.set(noteId, message)
-                listm.set(commentId - 1, Notes(
-                    noteId = noteId,
-                    text = listm[noteId - 1].text,
-                    title = listm[noteId-1].title,
-                    commentId = commentId,
-                    message = message))
-                mapNotes.set(noteId, Notes(noteId = mapNotes.getValue(noteId).noteId,
-                    commentId = mapNotes.getValue(noteId).commentId,
-                    message = message,
-                    deletedComment = false,
-                    text = mapNotes.getValue(noteId).text,
-                    title = mapNotes.getValue(noteId).title)
-                )
-            }
-            return 1
-        }
+    fun deleteNote(noteId: Int): Boolean {
+        mapNotes.remove(noteId) ?: return false
+        return true
+    }
 
-        fun restoreComment(noteId: Int): Int {
-            if (mapNotes.getValue(noteId).deletedComment == true) {
-//                commentsMap.put(commentId, commentsMap.get(commentId))
-//                deleteComments.remove(commentId)
-//        this.message = commentsMap.get(commentId)
-//                deletedComment = false
-                listm.set(commentId - 1,
-                    Notes(noteId = noteId,
-                        text = listm[commentId - 1].text,
-                        title = listm[commentId-1].title,
-                        commentId = commentId,
-                        message = message))
-                mapNotes.set(noteId, Notes(noteId = mapNotes.getValue(noteId).noteId,
-                    commentId = mapNotes.getValue(noteId).commentId,
-                    message = message,
-                    deletedComment = false,
-                    text = mapNotes.getValue(noteId).text,
-                    title = mapNotes.getValue(noteId).title)
-                )
-            }
-            return 1
-        }
-    fun getNotes(): MutableMap<Int, Notes>  {
+    fun deleteComment(noteId: Int, commentId: Int): Boolean {
+        val note = mapNotes[noteId] ?: return false
+        val comment = note.comments[commentId] ?: return false
+        comment.deletedComment = true
+        return true
+    }
+
+    fun editNote(noteId: Int, title: String, text: String): Boolean {
+
+        val note = mapNotes[noteId] ?: return false
+        mapNotes[noteId] = Notes(noteId = noteId, title = title, text = text, note.comments)
+
+        return true
+    }
+
+    fun editComment(noteId: Int, commentId: Int, message: String): Boolean {
+        val note = mapNotes[noteId] ?: return false
+        val comment = note.comments[commentId] ?: return false
+        comment.message = message
+        return true
+    }
+
+    fun restoreComment(noteId: Int, commentId: Int): Boolean {
+        val note = mapNotes[noteId] ?: return false
+        val comment = note.comments[commentId] ?: return false
+        comment.deletedComment = false
+        return true
+    }
+
+    fun getNotes(): MutableMap<Int, Notes> {
         return mapNotes
     }
-    fun getById(noteId: Int): Note.Notes {
+
+    fun getById(noteId: Int): Notes {
         return mapNotes.getValue(noteId)
     }
-    fun getCommentsById(noteId: Int): String?{
-        return mapNotes.getValue(noteId).message
+
+    fun getCommentsById(noteId: Int): Comment? {
+        val note = mapNotes[noteId] ?: return null
+        return note.comments[noteId]
     }
 
-    fun clear() {
-            listm = mutableListOf()
-        mapNotes = mutableMapOf()
-    }
 }
 
 fun main() {
 
-//    val list = mutableListOf<Note.Notes>()
-
-//    val note = Note.Notes()
-//    list.add(note)
     addNote("hello", "world")
     createComment(1, "wow")
     addNote("yui", "yui")
     createComment(2, "nope")
     editNote(1, "bye", "bye")
-    deleteComment(1)
+    deleteComment(1, 1)
 //    println(message)
 //    println(getNotes())
-    restoreComment(1)
+    restoreComment(1, 1)
 //    println(getCommentsById(1))
 //    deleteNote(1)
 //    println(getNotes())

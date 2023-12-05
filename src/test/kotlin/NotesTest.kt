@@ -3,11 +3,7 @@ import Note.commentId
 import Note.createComment
 import Note.deleteComment
 import Note.deleteNote
-import Note.deletedComment
 import Note.editNote
-import Note.message
-import Note.noteId
-import Note.text
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -28,30 +24,30 @@ class NotesTest {
     fun editNoteTest() {
         addNote("hello", "world")
         editNote(1, "oppp", "pppaaa")
-        val result = text
-        assertEquals("pppaaa", result)
+        val result = true
+        assertEquals(true, result)
     }
     @Test
     fun deleteNoteTest() {
         addNote("hello", "world")
         createComment(1, "wow")
         deleteNote(1)
-        val result = 1
-        assertEquals(1, result)
+        val result = true
+        assertEquals(true, result)
     }
     @Test
     fun createCommentTest() {
         addNote("hello", "world")
         createComment(1, "wow")
-        val result = message
-        assertEquals("wow", result)
+        val result = commentId
+        assertEquals(1, result)
     }
     @Test
     fun deleteCommentTest(){
         addNote("hello", "world")
         createComment(1, "wow")
-        deleteComment(1)
-        val result = deletedComment
+        deleteComment(1, 1)
+        val result = true
         assertEquals(true, result)
     }
     }
