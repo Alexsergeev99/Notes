@@ -5,6 +5,7 @@ import Note.deleteComment
 import Note.deleteNote
 import Note.editComment
 import Note.editNote
+import Note.getCommentsById
 import Note.getNotes
 import Note.noteId
 import Note.restoreComment
@@ -89,9 +90,9 @@ object Note {
         return mapNotes.getValue(noteId)
     }
 
-    fun getCommentsById(noteId: Int): Comment? {
+    fun getCommentsById(noteId: Int): MutableMap<Int, Comment>? {
         val note = mapNotes[noteId] ?: return null
-        return note.comments[noteId]
+        return note.comments
     }
 
 }
@@ -103,11 +104,13 @@ fun main() {
     addNote("yui", "yui")
     createComment(2, "nope")
     editNote(1, "bye", "bye")
-    deleteComment(1, 1)
+//    deleteComment(1, 1)
 //    println(message)
 //    println(getNotes())
-    restoreComment(1, 1)
-//    println(getCommentsById(1))
+//    restoreComment(1, 1)
+    createComment(1, "nope")
+
+    println(getCommentsById(1))
 //    deleteNote(1)
 //    println(getNotes())
 //    editComment(1, "note")
